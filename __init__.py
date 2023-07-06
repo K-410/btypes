@@ -108,10 +108,10 @@ class StructBase(Structure):
     @classmethod
     def get_member_type(cls, member: str):
         """Return the ctype of a member field."""
-        for name, ctype in cls._fields_:
-            if name == member:
-                return ctype
-        raise AttributeError(f"{cls} has no member '{member}'")
+        try:
+            return dict(cls._fields_)[member]
+        except:
+            raise AttributeError(f"{cls} has no member '{member}'")
 
 
 
