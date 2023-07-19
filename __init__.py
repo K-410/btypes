@@ -323,73 +323,83 @@ class uiBlock(StructBase):
     prev:                   lambda: POINTER(uiBlock)
 
     buttons:                lambda: ListBase(uiBut)
-    panel:                  c_void_p  # Panel
-    oldblock:               lambda: POINTER(uiBlock)
 
-    butstore:               ListBase
+    # These members aren't worth maintaining. We just want buttons.
+    if False:
+        panel:                  c_void_p  # Panel
+        oldblock:               lambda: POINTER(uiBlock)
 
-    if version >= (3, 3, 2):
-        button_groups:      lambda: blenderVector
+        butstore:               ListBase
 
-    elif version > (2, 82):
-        button_groups:      ListBase
+        if version >= (3, 3, 2):
+            button_groups:      lambda: blenderVector  # uiButtonGroup
 
-    layouts:                ListBase
-    curlayout:              c_void_p  # uiLayout
-    contexts:               ListBase
-    
-    if version > (2, 93):
-        views:              ListBase
+        elif version > (2, 82):
+            button_groups:      ListBase  # uiButtonGroup
 
-    if version > (3, 3, 1):
-        dynamic_listeners:  ListBase
+        layouts:                ListBase
+        curlayout:              c_void_p  # uiLayout
+        contexts:               ListBase
+        
+        if version > (2, 93):
+            views:              ListBase
 
-    name:                   c_char * 128  # UI_MAX_NAME_STR
-    winmat:                 c_float * 4 * 4
-    rect:                   rctf
-    aspect:                 c_float
-    puphash:                c_uint
+        if version > (3, 3, 1):
+            dynamic_listeners:  ListBase
 
-    func:                   c_void_p  # uiButHandleFunc
-    func_arg1:              c_void_p
-    func_arg2:              c_void_p
-    funcN:                  c_void_p  # uiButHandleNFunc
-    func_argN:              c_void_p
-    butm_func:              c_void_p  # uiMenuHandleFunc
-    butm_func_arg:          c_void_p
-    handle_func:            c_void_p  # uiBlockHandleFunc
-    handle_func_arg:        c_void_p
+        name:                   c_char * 128  # UI_MAX_NAME_STR
+        winmat:                 c_float * 4 * 4
+        rect:                   rctf
+        aspect:                 c_float
+        puphash:                c_uint
 
-    if version > (2, 93):
-        custom_interaction_callbacks: uiBlockInteraction_CallbackData
+        func:                   c_void_p  # uiButHandleFunc
+        func_arg1:              c_void_p
+        func_arg2:              c_void_p
 
-    block_event_func:   POINTER(c_int)
-    drawextra:          c_void_p
-    drawextra_arg1:     c_void_p
-    drawextra_arg2:     c_void_p
+        funcN:                  c_void_p  # uiButHandleNFunc
+        func_argN:              c_void_p
 
-    flag:               c_int
-    alignnr:            c_short
-    content_hints:      c_short
-    direction:          c_char
-    theme_style:        c_char
-    emboss:             c_int
-    auto_open:          c_bool
-    _pad5:              c_char * 5
-    auto_open_last:     c_double
-    lockstr:            c_char_p
-    lock:               c_bool
-    active:             c_bool
-    tooltipdisabled:    c_bool
-    endblock:           c_bool
-    bounds_type:        c_int
-    bounds_offset:      c_int * 2
-    bounds:             c_int
-    minbounds:          c_int
-    safety:             rctf
-    saferct:            ListBase  # uiSafetyRct
-    handle:             c_void_p  # uiPopupBlockHandle
-    # ... (cont)
+        butm_func:              c_void_p  # uiMenuHandleFunc
+        butm_func_arg:          c_void_p
+
+        handle_func:            c_void_p  # uiBlockHandleFunc
+        handle_func_arg:        c_void_p
+
+        if version > (2, 93):
+            custom_interaction_callbacks: uiBlockInteraction_CallbackData
+
+        block_event_func:   c_void_p
+        drawextra:          c_void_p
+        drawextra_arg1:     c_void_p
+        drawextra_arg2:     c_void_p
+
+        flag:               c_int
+        alignnr:            c_short
+        content_hints:      c_short
+
+        direction:          c_char
+        theme_style:        c_char
+        emboss:             c_int
+        auto_open:          c_bool
+        _pad5:              c_char * 5
+        auto_open_last:     c_double
+
+        lockstr:            c_char_p
+        lock:               c_bool
+        active:             c_bool
+        tooltipdisabled:    c_bool
+        endblock:           c_bool
+
+        bounds_type:        c_int
+        bounds_offset:      c_int * 2
+        bounds:             c_int
+        minbounds:          c_int
+
+        safety:             rctf
+        saferct:            ListBase  # uiSafetyRct
+        handle:             c_void_p  # uiPopupBlockHandle
+        # ... (cont)
 
 
 # source/blender/editors/interface/interface_intern.hh | rev 350
@@ -681,45 +691,48 @@ class uiPopupMenu(StructBase):
 
 # source/blender/makesdna/DNA_view2d_types.h | rev 350
 class View2D(StructBase):
-    tot:        rctf
-    cur:        rctf
-    vert:       rcti
-    hor:        rcti
-    mask:       rcti
+    tot:                rctf
+    cur:                rctf
+    vert:               rcti
+    hor:                rcti
+    mask:               rcti
 
-    min:        vec2f
-    max:        vec2f
+    min:                c_float * 2
+    max:                c_float * 2
 
-    minzoom:    c_float
-    maxzoom:    c_float
+    minzoom:            c_float
+    maxzoom:            c_float
 
-    scroll:     c_short
-    scroll_ui:  c_short
-    keeptot:    c_short
-    keepzoom:   c_short
-    keepofs:    c_short
+    scroll:             c_short
+    scroll_ui:          c_short
 
-    flag:       c_short
-    align:      c_short
+    keeptot:            c_short
+    keepzoom:           c_short
+    keepofs:            c_short
 
-    win:        vec2s
-    oldwin:     vec2s
+    flag:               c_short
+    align:              c_short
 
-    around:     c_short
+    winx:               c_short
+    winy:               c_short
+    oldwinx:            c_short
+    oldwiny:            c_short
+
+    around:             c_short
 
     if version < (2, 91):
-        tab_offset: POINTER(c_float)
-        tab_num:    c_int
-        tab_cur:    c_int
+        tab_offset:     POINTER(c_float)
+        tab_num:        c_int
+        tab_cur:        c_int
 
-    alpha_vert: c_char
-    alpha_hor:  c_char
+    alpha_vert:         c_char
+    alpha_hor:          c_char
 
     if version > (2, 92):
-        _pad6 = c_char * 6
+        _pad6:          c_char * 6
 
-    sms:            c_void_p  # SmoothView2DStore
-    smooth_timer:   c_void_p  # wmTimer
+    sms:                c_void_p  # SmoothView2DStore
+    smooth_timer:       c_void_p  # wmTimer
 
 
 # source/blender/windowmanager/WM_types.h | rev 350
@@ -1059,7 +1072,7 @@ class ARegion(StructBase):
     sizey:                  c_short
 
     do_draw:                c_short
-    do_draw_overlay:        c_short
+    do_draw_overlay:        c_short  # Called do_draw_paintcursor before 3.5.0.
     overlap:                c_short
     flagfullscreen:         c_short
 
