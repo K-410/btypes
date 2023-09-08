@@ -251,7 +251,7 @@ class rectBase(StructBase):
                self.ymin <= y and self.ymax >= y
 
 
-# source/blender/makesdna/DNA_vec_types.h | rev 350
+# source/blender/makesdna/DNA_vec_types.h | rev 362
 class rctf(rectBase):
     xmin:   c_float
     xmax:   c_float
@@ -259,7 +259,7 @@ class rctf(rectBase):
     ymax:   c_float
 
 
-# source/blender/makesdna/DNA_vec_types.h | rev 350
+# source/blender/makesdna/DNA_vec_types.h | rev 362
 class rcti(rectBase):
     xmin:   c_int
     xmax:   c_int
@@ -267,7 +267,7 @@ class rcti(rectBase):
     ymax:   c_int
 
 
-# source/blender/makesdna/DNA_screen_types.h | rev 350
+# source/blender/makesdna/DNA_screen_types.h | rev 362
 class Panel_Runtime(StructBase):
     region_ofsx:            c_int
     _pad4:                  c_char * 4
@@ -276,18 +276,18 @@ class Panel_Runtime(StructBase):
         custom_data_ptr:    lambda: POINTER(PointerRNA)
         block:              lambda: POINTER(uiBlock)
 
-    if version < (3, 1):
+    if version > (3, 1):
         context:            c_void_p  # bContextStore
 
 
-# source/blender/makesrna/RNA_types.h | rev 350
+# source/blender/makesrna/RNA_types.h | rev 362
 class PointerRNA(StructBase):
     owner_id:               lambda: POINTER(ID)
     type:                   c_void_p  # StructRNA
     data:                   c_void_p
 
 
-# source/blender/editors/include/UI_interface.h | rev 350
+# source/blender/editors/include/UI_interface.h | rev 362
 class uiBlockInteraction_CallbackData(StructBase):
     begin_fn:               c_void_p  # uiBlockInteractionBeginFn
     end_fn:                 c_void_p  # uiBlockInteractionEndFn
@@ -295,7 +295,7 @@ class uiBlockInteraction_CallbackData(StructBase):
     arg1:                   c_void_p
 
 
-# source/blender/editors/interface/interface_intern.hh | rev 350
+# source/blender/editors/interface/interface_intern.hh | rev 362
 class uiPopupBlockCreate(StructBase):
     create_func:            c_void_p  # uiBlockCreateFunc
     handle_create_func:     c_void_p  # uiBlockHandleCreateFunc
@@ -306,105 +306,29 @@ class uiPopupBlockCreate(StructBase):
     but:                    lambda: POINTER(uiBut)
 
 
-# source/blender/editors/interface/interface_intern.hh | rev 350
+# source/blender/editors/interface/interface_intern.hh | rev 362
 class uiKeyNavLock(StructBase):
     is_keynav:              c_bool
     event_xy:               vec2i
 
 
-# source/blender/blenlib/BLI_vector.hh | rev 350
+# source/blender/blenlib/BLI_vector.hh | rev 362
 class blenderVector(StructBase):
     begin_:             c_void_p
     end_:               c_void_p
     capacity_end_:      c_void_p
 
 
-# source/blender/editors/interface/interface_intern.hh | rev 350
+# source/blender/editors/interface/interface_intern.hh | rev 362
 class uiBlock(StructBase):
     next:                   lambda: POINTER(uiBlock)
     prev:                   lambda: POINTER(uiBlock)
 
     buttons:                lambda: ListBase(uiBut)
-
-    # These members aren't worth maintaining. We just want buttons.
-    if False:
-        panel:                  c_void_p  # Panel
-        oldblock:               lambda: POINTER(uiBlock)
-
-        butstore:               ListBase
-
-        if version >= (3, 3, 2):
-            button_groups:      lambda: blenderVector  # uiButtonGroup
-
-        elif version > (2, 82):
-            button_groups:      ListBase  # uiButtonGroup
-
-        layouts:                ListBase
-        curlayout:              c_void_p  # uiLayout
-        contexts:               ListBase
-        
-        if version > (2, 93):
-            views:              ListBase
-
-        if version > (3, 3, 1):
-            dynamic_listeners:  ListBase
-
-        name:                   c_char * 128  # UI_MAX_NAME_STR
-        winmat:                 c_float * 4 * 4
-        rect:                   rctf
-        aspect:                 c_float
-        puphash:                c_uint
-
-        func:                   c_void_p  # uiButHandleFunc
-        func_arg1:              c_void_p
-        func_arg2:              c_void_p
-
-        funcN:                  c_void_p  # uiButHandleNFunc
-        func_argN:              c_void_p
-
-        butm_func:              c_void_p  # uiMenuHandleFunc
-        butm_func_arg:          c_void_p
-
-        handle_func:            c_void_p  # uiBlockHandleFunc
-        handle_func_arg:        c_void_p
-
-        if version > (2, 93):
-            custom_interaction_callbacks: uiBlockInteraction_CallbackData
-
-        block_event_func:   c_void_p
-        drawextra:          c_void_p
-        drawextra_arg1:     c_void_p
-        drawextra_arg2:     c_void_p
-
-        flag:               c_int
-        alignnr:            c_short
-        content_hints:      c_short
-
-        direction:          c_char
-        theme_style:        c_char
-        emboss:             c_int
-        auto_open:          c_bool
-        _pad5:              c_char * 5
-        auto_open_last:     c_double
-
-        lockstr:            c_char_p
-        lock:               c_bool
-        active:             c_bool
-        tooltipdisabled:    c_bool
-        endblock:           c_bool
-
-        bounds_type:        c_int
-        bounds_offset:      c_int * 2
-        bounds:             c_int
-        minbounds:          c_int
-
-        safety:             rctf
-        saferct:            ListBase  # uiSafetyRct
-        handle:             c_void_p  # uiPopupBlockHandle
-        # ... (cont)
+    # ... (cont)
 
 
-# source/blender/editors/interface/interface_intern.hh | rev 350
+# source/blender/editors/interface/interface_intern.hh | rev 362
 class uiBut(StructBase):
     next:               lambda: POINTER(uiBut)
     prev:               lambda: POINTER(uiBut)
@@ -414,8 +338,8 @@ class uiBut(StructBase):
 
     flag:           c_int
     drawflag:       c_int
-    type:           c_int
-    pointype:       c_int
+    type:           c_int  # eButType
+    pointype:       c_int  # eButPointerType
 
     bit:            c_short
     bitnr:          c_short
@@ -429,8 +353,8 @@ class uiBut(StructBase):
     selend:         c_short
 
     str:            c_char_p
-    strdata:        c_char * 128
-    drawstr:        c_char * 400
+    strdata:        c_char * 128  # UI_MAX_NAME_STR
+    drawstr:        c_char * 400  # UI_MAX_DRAW_STR
 
     rect:           rctf
     poin:           c_char_p
@@ -457,6 +381,7 @@ class uiBut(StructBase):
         func_argN:      c_void_p
 
     context:            c_void_p
+
     autocomplete_func:  c_void_p
     autofunc_arg:       c_void_p
 
@@ -481,17 +406,17 @@ class uiBut(StructBase):
 
     disabled_info:      c_char_p
 
-    icon:               c_int
+    icon:               c_int  # BIFIconID
 
     if version < (2, 93):
         emboss:             c_char
     else:
-        emboss:             c_int
+        emboss:             c_int  # eUIEmbossType
     
     if version < (3, 2):
         pie_dir:            c_byte
     else:
-        pie_dir:            c_int
+        pie_dir:            c_int  # RadialDirection
 
     changed:            c_bool
     unit_type:          c_ubyte
@@ -517,11 +442,11 @@ class uiBut(StructBase):
     opptr:              lambda: POINTER(PointerRNA)
     opcontext:          c_int  # enum wmOperatorCallContext
     menu_key:           c_ubyte
-    extra_op_icons:     ListBase
+    extra_op_icons:     ListBase  # uiButExtraOpIcon
     dragtype:           c_char
     dragflag:           c_short
     dragpoin:           c_void_p
-    imb:                c_void_p
+    imb:                c_void_p  # ImBuf
     imb_scale:          c_float
     active:             c_void_p  # uiHandleButtonData
     custom_data:        c_void_p
@@ -534,7 +459,7 @@ class uiBut(StructBase):
         editcumap: c_void_p
         editprofile: c_void_p
 
-    pushed_state_func:  c_void_p
+    pushed_state_func:  c_void_p  # uiButPushedStateFunc
     pushed_state_arg:   c_void_p
 
     if version > (3, 3):
@@ -547,7 +472,7 @@ class uiBut(StructBase):
     block:              lambda: POINTER(uiBlock)
 
 
-# source/blender/editors/space_text/text_draw.c | rev 350
+# source/blender/editors/space_text/text_draw.c | rev 362
 class DrawCache(StructBase):
     line_height:        POINTER(c_int)
     total_lines:        c_int
@@ -567,7 +492,7 @@ class DrawCache(StructBase):
     valid_tail:         c_int
 
 
-# source/blender/makesdna/DNA_ID.h | rev 350
+# source/blender/makesdna/DNA_ID.h | rev 362
 class ID_Runtime_Remap(StructBase):
     status:                 c_int
     skipped_refcounted:     c_int
@@ -575,12 +500,12 @@ class ID_Runtime_Remap(StructBase):
     skipped_indirect:       c_int
 
 
-# source/blender/makesdna/DNA_ID.h | rev 350
+# source/blender/makesdna/DNA_ID.h | rev 362
 class ID_Runtime(StructBase):
     remap:                  ID_Runtime_Remap
 
 
-# source/blender/makesdna/DNA_ID.h | rev 350
+# source/blender/makesdna/DNA_ID.h | rev 362
 class ID(StructBase):
     next:                   c_void_p
     prev:                   c_void_p
@@ -591,7 +516,7 @@ class ID(StructBase):
     if version > (2, 91):
         asset_data:         c_void_p  # AssetMetaData
 
-    name:                   c_char * 66
+    name:                   c_char * 66  # MAX_ID_NAME
     flag:                   c_short
     tag:                    c_int
     us:                     c_int
@@ -601,6 +526,7 @@ class ID(StructBase):
     recalc_after_undo_push: c_uint
 
     session_uuid:           c_uint
+
     properties:             c_void_p  # IDProperty
     override_library:       c_void_p  # IDOverrideLibrary
     orig_id:                lambda: POINTER(ID)
@@ -610,38 +536,38 @@ class ID(StructBase):
     if version > (2, 93):
         library_weak_reference: c_void_p
 
-    elif version > (2, 83):
+    if version <= (2, 83):
         _pad1:              c_void_p
 
     if version > (3, 1):
         runtime:            ID_Runtime
 
 
-# source/blender/makesdna/DNA_space_types.h | rev 350
+# source/blender/makesdna/DNA_space_types.h | rev 362
 class SpaceText_Runtime(StructBase):
     # Confusingly not line height in pixels. Use property instead.
-    _lheight_px:             c_int
+    _lheight_px:                 c_int
 
-    cwidth_px:              c_int
-    scroll_region_handle:   rcti
-    scroll_region_select:   rcti
-    lnum:                   c_int
-    viewlines:              c_int
-    scroll_px_per_line:     c_float
-    _offs_px:               vec2i
-    _pad1:                  c_char * 4
-    drawcache:              lambda: POINTER(DrawCache)
+    cwidth_px:                  c_int
+    scroll_region_handle:       rcti
+    scroll_region_select:       rcti
+    line_number_display_digits: c_int
+    viewlines:                  c_int
+    scroll_px_per_line:         c_float
+    scroll_ofs_px:              vec2i
+    _pad1:                      c_char * 4
+    drawcache:                  lambda: POINTER(DrawCache)
 
     @property
     def lpad_px(self):
-        return self.cwidth_px * (self.lnum + 3)
+        return self.cwidth_px * (self.line_number_display_digits + 3)
 
     @property
     def lheight_px(self):
         return int(self._lheight_px * 1.3)
 
 
-# source/blender/makesdna/DNA_text_types.h | rev 350
+# source/blender/makesdna/DNA_text_types.h | rev 362
 class TextLine(StructBase):
     next:       lambda: POINTER(TextLine)
     prev:       lambda: POINTER(TextLine)
@@ -652,7 +578,7 @@ class TextLine(StructBase):
     _pad0:      c_char * 4
 
 
-# source/blender/makesdna/DNA_text_types.h | rev 350
+# source/blender/makesdna/DNA_text_types.h | rev 362
 class Text(StructBase):
     id:         lambda: ID
     filepath:   c_char_p
@@ -672,7 +598,7 @@ class Text(StructBase):
     mtime:      c_double
 
 
-# source/blender/editors/interface/interface_region_menu_popup.cc | rev 350
+# source/blender/editors/interface/interface_region_menu_popup.cc | rev 362
 class uiPopupMenu(StructBase):
     block:              lambda: POINTER(uiBlock)
     layout:             c_void_p  # uiLayout
@@ -685,13 +611,10 @@ class uiPopupMenu(StructBase):
     mxy:                vec2i
     popup:              c_bool
     slideout:           c_bool
-
-    # NOTE: In 3.3.2 and up, "menu_func" is a std::function wrapper.
-    menu_func:          c_void_p
-    menu_arg:           c_void_p
+    # ... (cont)
 
 
-# source/blender/makesdna/DNA_view2d_types.h | rev 350
+# source/blender/makesdna/DNA_view2d_types.h | rev 362
 class View2D(StructBase):
     tot:                rctf
     cur:                rctf
@@ -737,7 +660,7 @@ class View2D(StructBase):
     smooth_timer:       c_void_p  # wmTimer
 
 
-# source/blender/windowmanager/WM_types.h | rev 350
+# source/blender/windowmanager/WM_types.h | rev 362
 class wmEvent(StructBase):
     next:               lambda: POINTER(wmEvent)
     prev:               lambda: POINTER(wmEvent)
@@ -762,6 +685,7 @@ class wmEvent(StructBase):
         ascii:              c_char
 
     modifier:           c_char
+    # ... (cont)
 
     @property
     def ctrl(self) -> bool:
@@ -779,52 +703,31 @@ class wmEvent(StructBase):
     def type_string(self):
         return event_type_to_string(self.type)
 
-    # XXX layout commit history is a complete mess. DO NOT USE BELOW.
-    # is_repeat:          c_char
-    # prevtype:           c_short
-    # prevval:            c_short
 
-    # if version < (2, 93):
-    #     prev_xy:           vec2i
-
-    # prevclicktime:      c_double
-    # prevclick:          vec2i
-
-    # if version > (2, 83):
-    #     prev_xy:           vec2i
-
-    # else:
-    #     check_click:    c_char
-    #     check_drag:     c_char
-
-    # tablet:             wmTabletData
-    # custom:             c_short
-    # customdatafree:     c_short
-    # pad2:               c_int
-    # customdata:         c_void_p
-
-    # if version > (2, 83):
-    #     is_direction_inverted: c_char
-
-
-# source/blender/windowmanager/wm_event_system.h | rev 350
+# source/blender/windowmanager/wm_event_system.h | rev 362
 class wmEventHandler(StructBase):  # Generic
-    next:   lambda: POINTER(wmEventHandler)
-    prev:   lambda: POINTER(wmEventHandler)
+    next:       lambda: POINTER(wmEventHandler)
+    prev:       lambda: POINTER(wmEventHandler)
 
-    type:   c_int       # enum eWM_EventHandlerType
-    flag:   c_char      # enum eWM_EventHandlerFlag
-    poll:   c_void_p    # func EventHandlerPoll
+    type:       c_int       # enum eWM_EventHandlerType
+
+    if version < (3, 5):
+        flag:   c_char
+
+    if version >= (3, 5):
+        flag:   c_int       # enum eWM_EventHandlerFlag
+
+    poll:       c_void_p    # func EventHandlerPoll
 
 
-# source/blender/blenkernel/BKE_context.h | rev 350
+# source/blender/blenkernel/BKE_context.h | rev 362
 class bContextPollMsgDyn_Params(StructBase):
     get_fn:         c_void_p
     free_fn:        c_void_p
     user_data:      c_void_p
 
 
-# makesdna\DNA_screen_types.h
+# makesdna\DNA_screen_types.h | rev 362
 class bScreen(StructBase):
     id:                     lambda: ID
     vertbase:               ListBase
@@ -852,11 +755,11 @@ class bScreen(StructBase):
     preview:                c_void_p  # PreviewImage
 
 
-# source/blender/blenkernel/intern/context.cc | rev 350
+# source/blender/blenkernel/intern/context.cc | rev 362
 class bContext(StructBase):
     thread:         c_int
 
-    class _wm(StructBase):
+    class wm(StructBase):
         manager:        lambda: POINTER(wmWindowManager)
         window:         lambda: POINTER(wmWindow)
         workspace:      c_void_p  # WorkSpace
@@ -870,10 +773,10 @@ class bContext(StructBase):
         operator_poll_msg: c_char_p
         operator_poll_msg_dyn_params: bContextPollMsgDyn_Params
 
-    wm: _wm
-    del _wm
+    wm: wm
+    del wm
 
-    class _data(StructBase):
+    class data(StructBase):
         main:               c_void_p  # Main
         scene:              c_void_p  # Scene
         recursion:          c_int
@@ -881,17 +784,17 @@ class bContext(StructBase):
         py_context:         c_void_p
         py_context_orig:    c_void_p
     
-    data: _data
-    del _data
+    data: data
+    del data
 
 
-# source/blender/makesdna/DNA_windowmanager_types.h | rev 350
+# source/blender/makesdna/DNA_windowmanager_types.h | rev 362
 class wmOperator(StructBase):
     next:           lambda: POINTER(wmOperator)
     prev:           lambda: POINTER(wmOperator)
 
-    idname:         c_char * 64
-    properties:     c_void_p  # IDProperty
+    idname:         c_char * 64  # OP_MAX_TYPENAME
+    properties:     c_void_p     # IDProperty
     type:           lambda: POINTER(wmOperatorType)
     customdata:     c_void_p
     pyinstance:     c_void_p
@@ -904,7 +807,7 @@ class wmOperator(StructBase):
     _pad6:          c_char * 6
 
 
-# source/blender/windowmanager/WM_types.h | rev 350
+# source/blender/windowmanager/WM_types.h | rev 362
 class wmOperatorType(StructBase):
     name:                   c_char_p
     idname:                 c_char_p
@@ -937,24 +840,24 @@ class wmOperatorType(StructBase):
     flag:                   c_short
 
 
-# source/blender/windowmanager/wm_event_system.h | rev 350
+# source/blender/windowmanager/wm_event_system.h | rev 362
 class wmEventHandler_Op(StructBase):
-
     head:           wmEventHandler
+
     op:             lambda: POINTER(wmOperator)
     is_file_select: c_bool
     
-    class op_context(StructBase):
+    class context(StructBase):
         win:            lambda: POINTER(wmWindow)
         area:           lambda: POINTER(ScrArea)
         region:         lambda: POINTER(ARegion)
         region_type:    c_short
 
-    context:        op_context
-    del op_context
+    context:        context
+    del context
 
 
-# source/blender/blenkernel/BKE_screen.h | rev 350
+# source/blender/blenkernel/BKE_screen.h | rev 362
 class SpaceType(StructBase):
     next:                       lambda: POINTER(SpaceType)
     prev:                       lambda: POINTER(SpaceType)
@@ -994,21 +897,26 @@ class SpaceType(StructBase):
     keymapflag:                 c_int
 
 
-# source/blender/makesdna/DNA_screen_types.h | rev 350
+# source/blender/makesdna/DNA_screen_types.h | rev 362
 class ScrArea_Runtime(StructBase):
     tool:           c_void_p  # bToolRef
     is_tool_set:    c_char
     _pad0:          c_char * 7
 
 
-# source/blender/blenkernel/BKE_screen.h | rev 350
+# source/blender/blenkernel/BKE_screen.h | rev 362
 class ARegionType(StructBase):
     next:                       lambda: POINTER(ARegionType)
     prev:                       lambda: POINTER(ARegionType)
     
     regionid:                   c_int
+
     init:                       c_void_p
     exit:                       c_void_p
+
+    if version > (3, 5):
+        poll:                   c_void_p
+
     draw:                       lambda: CFUNCTYPE(None, POINTER(bContext), POINTER(ARegion))
 
     if version > (2, 83):
@@ -1018,13 +926,17 @@ class ARegionType(StructBase):
     snap_size:                  c_void_p
     listener:                   lambda: CFUNCTYPE(None, c_void_p)
     message_subscribe:          c_void_p
+
     free:                       c_void_p
+
     duplicate:                  c_void_p
+
     operatortypes:              c_void_p
     keymap:                     c_void_p
 
     # Cursor handler
     cursor:                     lambda: CFUNCTYPE(None, POINTER(wmWindow), POINTER(ScrArea), POINTER(ARegion))
+
     context:                    c_void_p  # bContextDataCallback
 
     if version > (2, 83):
@@ -1043,6 +955,7 @@ class ARegionType(StructBase):
     event_cursor:               c_short
 
 
+# source/blender/makesdna/DNA_screen_types.h | rev 362
 class ARegion_Runtime(StructBase):
     category:           c_char_p
 
@@ -1054,7 +967,7 @@ class ARegion_Runtime(StructBase):
     block_name_map:     c_void_p  # GHash
 
 
-# source/blender/makesdna/DNA_screen_types.h | rev 350
+# source/blender/makesdna/DNA_screen_types.h | rev 362
 class ARegion(StructBase):
     next:                   lambda: POINTER(ARegion)
     prev:                   lambda: POINTER(ARegion)
@@ -1065,6 +978,10 @@ class ARegion(StructBase):
     winx:                   c_short
     winy:                   c_short
 
+    if version > (3, 5):
+        category_scroll:    c_int
+        _pad0:              c_char * 4
+
     visible:                c_short
     regiontype:             c_short
     alignment:              c_short
@@ -1074,7 +991,7 @@ class ARegion(StructBase):
     sizey:                  c_short
 
     do_draw:                c_short
-    do_draw_overlay:        c_short  # Called do_draw_paintcursor before 3.5.0.
+    do_draw_overlay:        c_short  # (do_draw_paintcursor) they keep renaming this X_X
     overlap:                c_short
     flagfullscreen:         c_short
 
@@ -1098,7 +1015,7 @@ class ARegion(StructBase):
     runtime:                ARegion_Runtime
 
 
-# source/blender/makesdna/DNA_space_types.h | rev 350
+# source/blender/makesdna/DNA_space_types.h | rev 362
 class SpaceLink(StructBase):
     next:                   lambda: POINTER(SpaceLink)
     prev:                   lambda: POINTER(SpaceLink)
@@ -1109,7 +1026,7 @@ class SpaceLink(StructBase):
     _pad0:                  c_char * 6
 
 
-# source/blender/makesdna/DNA_screen_types.h | rev 350
+# source/blender/makesdna/DNA_screen_types.h | rev 362
 class ScrArea(StructBase):
     next:                   lambda: POINTER(ScrArea)
     prev:                   lambda: POINTER(ScrArea)
@@ -1150,7 +1067,7 @@ class ScrArea(StructBase):
             az = az.contents.prev
 
 
-# source/blender/makesdna/DNA_space_types.h | rev 350
+# source/blender/makesdna/DNA_space_types.h | rev 362
 class SpaceText(StructBase):
     next:               POINTER(SpaceLink)
     prev:               POINTER(SpaceLink)
@@ -1173,22 +1090,22 @@ class SpaceText(StructBase):
 
     wordwrap:           c_char
     doplugins:          c_char
-    showlnum:           c_char
+    showlnum:           c_char  # (showlinenrs)
     showsyntax:         c_char
     line_hlight:        c_char
     overwrite:          c_char
     live_edit:          c_char
     _pad2:              c_char * 1
 
-    findstr:            c_char * 256
-    replacestr:         c_char * 256
+    findstr:            c_char * 256  # ST_MAX_FIND_STR
+    replacestr:         c_char * 256  # ST_MAX_FIND_STR
 
     margin_column:      c_short
     _pad3:              c_char * 2
     runtime:            SpaceText_Runtime
 
 
-# source/blender/makesdna/DNA_windowmanager_types.h  | rev 350
+# source/blender/makesdna/DNA_windowmanager_types.h  | rev 362
 class wmWindow(StructBase):
     next:                   lambda: POINTER(wmWindow)
     prev:                   lambda: POINTER(wmWindow)
@@ -1241,11 +1158,10 @@ class wmWindow(StructBase):
         event_queue_check_drag:         c_char
         event_queue_check_drag_handled: c_char
 
-    # TODO: Use less than. This is currently a 3.5.0 beta workaround.
-    if version <= (3, 5, 0):
+    if version < (3, 5, 0):
         _pad0:                                  c_char * 1
 
-    else:
+    if version >= (3, 5, 0):
         event_queue_consecutive_gesture_type:   c_char
         event_queue_consecutive_gesture_xy:     c_int * 2
         event_queue_consecutive_gesture_data:   c_void_p  # wmEvent_ConsecutiveData
@@ -1272,7 +1188,7 @@ class wmWindow(StructBase):
     cursor_keymap_status:   c_void_p
 
 
-# source/blender/makesdna/DNA_windowmanager_types.h | rev 350
+# source/blender/makesdna/DNA_windowmanager_types.h | rev 362
 class ReportList(StructBase):
     list:           ListBase  # Report
     printlevel:     c_int
@@ -1282,7 +1198,7 @@ class ReportList(StructBase):
     reporttimer:    c_void_p  # wmTimer
 
 
-# source/blender/makesdna/DNA_windowmanager_types.h | rev 350
+# source/blender/makesdna/DNA_windowmanager_types.h | rev 362
 class wmWindowManager(StructBase):
     ID:                         lambda: ID
 
@@ -1293,6 +1209,7 @@ class wmWindowManager(StructBase):
     initialized:                c_short
     file_saved:                 c_short
     op_undo_depth:              c_short
+
     outliner_sync_select_dirty: c_short
 
     operators:                  ListBase(wmOperator)  # Operator undo history
@@ -1321,7 +1238,7 @@ class wmWindowManager(StructBase):
     # ... (cont)
 
 
-# source/blender/makesdna/DNA_userdef_types.h | rev 350
+# source/blender/makesdna/DNA_userdef_types.h | rev 362
 class SolidLight(StructBase):
     flag:       c_int
     smooth:     c_float
@@ -1334,7 +1251,7 @@ class SolidLight(StructBase):
     vec:        c_float * 4
 
 
-# source/blender/makesdna/DNA_userdef_types.h | rev 350
+# source/blender/makesdna/DNA_userdef_types.h | rev 362
 class UserDef(StructBase):
     versionfile:            c_int
     subversionfile:         c_int
@@ -1347,12 +1264,12 @@ class UserDef(StructBase):
     mouse_emulate_3_button_modifier: c_char
     _pad4:                  c_char * 1
 
-    tempdir:                c_char * 768
+    tempdir:                c_char * 768  # FILE_MAXDIR
     fontdir:                c_char * 768
     renderdir:              c_char * 1024
     render_cachedir:        c_char * 768
     textudir:               c_char * 768
-    pythondir:              c_char * 768
+    pythondir:              c_char * 768  # DNA_DEPRECATED
     sounddir:               c_char * 768
     i18ndir:                c_char * 768
     image_editor:           c_char * 1024
@@ -1376,6 +1293,7 @@ class UserDef(StructBase):
     uiflag2:                c_char
     gpu_flag:               c_char
     _pad8:                  c_char * 6
+
     app_flag:               c_char
     viewzoom:               c_char
     language:               c_short
@@ -1389,8 +1307,8 @@ class UserDef(StructBase):
     ui_scale:               c_float
     ui_line_width:          c_int
     dpi:                    c_int
-    dpi_fac:                c_float
-    inv_dpi_fac:            c_float
+    dpi_fac:                c_float  # (scale_factor)
+    inv_dpi_fac:            c_float  # (inv_scale_factor)
     pixelsize:              c_float
     virtual_pixel:          c_int
 
@@ -1409,6 +1327,10 @@ class UserDef(StructBase):
     user_keyconfig_prefs:   ListBase
     addons:                 ListBase
     autoexec_paths:         ListBase
+
+    if version >= (3, 6):
+        script_directories: ListBase
+
     user_menus:             ListBase
 
     if version > (2, 83):
@@ -1444,10 +1366,13 @@ class UserDef(StructBase):
 
     edit_studio_light:      c_short
     lookdev_sphere_size:    c_short
+
     vbotimeout:             c_short
     vbocollectrate:         c_short
+
     textimeout:             c_short
     texcollectrate:         c_short
+
     memcachelimit:          c_int
     prefetchframes:         c_int
     pad_rot_angle:          c_float
@@ -1469,7 +1394,7 @@ class UserDef(StructBase):
     view_frame_seconds:     c_float
 
     if version > (3, 3, 4):
-        gpu_backend:        c_short
+        gpu_backend:        c_short  # eGPUBackendType
         _pad7:              c_char * 4
     
     if version < (3, 3, 5):
