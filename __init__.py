@@ -78,6 +78,17 @@ def get_area_region_type(space: str, region: str):
     return _art_cache[space, region]
 
 
+@factory
+def get_last_event_type():
+    from _bpy import context as _context
+    def get_last_event_type():
+        if window := _context.window:
+            for evt in wmWindow(window).event_queue:
+                return evt.type_string
+        return 'NONE'
+    return get_last_event_type
+
+
 class StructBase(Structure):
     """For Blender structs.
 
@@ -1179,7 +1190,7 @@ class wmWindow(StructBase):
         tweak:                  c_void_p
 
     ime_data:               c_void_p  # wmIMEData
-    event_queue:            ListBase
+    event_queue:            ListBase(wmEvent)
     handlers:               ListBase(wmEventHandler)
     modalhandlers:          ListBase(wmEventHandler)
     gesture:                ListBase
