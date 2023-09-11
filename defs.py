@@ -123,3 +123,10 @@ TXT_ISSCRIPT      = 1 << 4
 TXT_FLAG_UNUSED_8 = 1 << 8
 TXT_FLAG_UNUSED_9 = 1 << 9
 TXT_TABSTOSPACES  = 1 << 10
+
+
+# Expose bitflags not present in blf python module.
+# source/blender/blenfont/BLF_api.h
+# FontBLF.flags
+BLF_BOLD          = 1 << 11
+BLF_ITALIC        = 1 << 12
