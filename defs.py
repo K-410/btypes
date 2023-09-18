@@ -1,4 +1,4 @@
-# This module holds common macro defines and enums for DNA.
+"""This module holds common macro defines and enums for DNA."""
 
 
 # DNA_windowmanager_types.h
