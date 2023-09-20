@@ -25,6 +25,8 @@ from . import defs
 from .defs import area_to_enum, region_to_enum
 
 import bpy
+from _bpy import context as _context
+
 
 version = bpy.app.version
 
@@ -57,7 +59,7 @@ def iter_links(link):
 
 
 def get_space_type(space: str):
-    area = bpy.context.window_manager.windows[0].screen.areas[0]
+    area = _context.window_manager.windows[0].screen.areas[0]
     enum = area_to_enum(space)
 
     for st in iter_links(ScrArea(area).type):
@@ -80,7 +82,6 @@ def get_area_region_type(space: str, region: str):
 
 @factory
 def get_last_event_type():
-    from _bpy import context as _context
     def get_last_event_type():
         if window := _context.window:
             for evt in wmWindow(window).event_queue:
@@ -104,6 +105,15 @@ class StructBase(Structure):
         cls._structs.append(cls)
 
     def __new__(cls, srna: bpy.types.bpy_struct = None):
+        # If StructBase isn't initialized before use, do it now. We can tell
+        # by ``cls._structs`` not being empty.
+        # TODO: This should be a per-StructBase subclass.
+        if cls._structs:
+            StructBase._initialize()
+            StructBase.__new__ = StructBase._real_new
+        return cls.__new__(cls, srna)
+
+    def _real_new(cls, srna: bpy.types.bpy_struct = None):
         """When passing no arguments, creates an instance.
         
         When passing a StructRNA instance, instantiate the struct using the
@@ -126,6 +136,43 @@ class StructBase(Structure):
         except:
             raise AttributeError(f"{cls} has no member '{member}'")
 
+    @staticmethod
+    def _initialize():
+        """Initialize StructBase subclasses, converting annotations to fields.
+
+        This must be called
+        - after all StructBase subclasses have been defined
+        - before member offsets are read for address calculations
+        - before the structures are used
+        """
+
+        # Beta versions aren't supported because they may have changes in DNA
+        # not present in release builds. Supporting betas would be a significant
+        # maintenance upkeep.
+        check_version_cycle()
+
+        is_func = type(lambda: None).__instancecheck__
+        for struct in StructBase._structs:
+            anons  = []
+            fields = []
+            for key, value in struct.__annotations__.items():
+                # Lambdas
+                if is_func(value):
+                    value = value()
+
+                elif isinstance(value, Union):
+                    anons.append(key)
+
+                fields.append((key, value))
+
+            if anons:
+                struct._anonynous_ = anons
+
+            if fields:
+                struct._fields_ = fields
+
+        StructBase._structs.clear()
+        ListBase._cache.clear()
 
 
 class ListBase(Structure):
@@ -177,44 +224,6 @@ class ListBase(Structure):
 
     def __bool__(self):
         return bool(self.first or self.last)
-
-
-def initialize():
-    """Initialize StructBase subclasses, converting annotations to fields.
-
-    This must be called
-    - after all StructBase subclasses have been defined
-    - before member offsets are read for address calculations
-    - before the structures are used
-    """
-
-    # Beta versions aren't supported because they may have changes in DNA
-    # not present in release builds. Supporting betas would be a significant
-    # maintenance upkeep.
-    check_version_cycle()
-
-    is_func = type(lambda: None).__instancecheck__
-    for struct in StructBase._structs:
-        anons  = []
-        fields = []
-        for key, value in struct.__annotations__.items():
-            # Lambdas
-            if is_func(value):
-                value = value()
-
-            elif isinstance(value, Union):
-                anons.append(key)
-
-            fields.append((key, value))
-
-        if anons:
-            struct._anonynous_ = anons
-
-        if fields:
-            struct._fields_ = fields
-
-    StructBase._structs.clear()
-    ListBase._cache.clear()
 
 
 class vec2Base(StructBase):
