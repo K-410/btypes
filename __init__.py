@@ -68,7 +68,7 @@ def get_space_type(space: str):
     raise Exception(f"'{space}' does not exist")
 
 
-def get_area_region_type(space: str, region: str):
+def get_ARegionType(space: str, region: str):
     if (space, region) not in _art_cache:
         enum = region_to_enum(region)
         for art in get_space_type(space).regiontypes:
